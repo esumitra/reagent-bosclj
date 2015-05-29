@@ -40,7 +40,6 @@
   (secretary/set-config! :prefix "#")
   (session/put! :page :home)
   (utils/mount-component cnavbar/navbar (:navbar appdata) "navbar")
-  (utils/mount-component page nil "app")
-  (println "initializer called"))
+  (utils/mount-component page nil "app"))
 
 (init!)
