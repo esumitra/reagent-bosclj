@@ -5,26 +5,30 @@
    [reagent-bosclj.comp-tasks :as ctask]
    [reagent-bosclj.utils :as utils]))
 
+(defn page-header
+  [title message]
+  [:div.jumbotron
+   [:h2 title]
+   [:p message]])
+
 (defn dashboard
   []
   [:div
-   [:h2 "Task Dashboard"]
-   [:div.panel [:h1 "Add tasks"]]
-   [:div.panel
-    [:div.row
-     [:div.col-sm-4
-      [ctask/task-panel "New" :new []]]
-     [:div.col-sm-4
-      [ctask/task-panel "Pending" :scheduled []]]
-     [:div.col-sm-4
-      [ctask/task-panel "Completed" :completed []]]]]])
+   [page-header "Task Dashboard"]
+   [:div.row
+    [:div.col-sm-4
+     [ctask/task-panel "New" :new []]]
+    [:div.col-sm-4
+     [ctask/task-panel "Pending" :scheduled []]]
+    [:div.col-sm-4
+     [ctask/task-panel "Completed" :completed []]]]])
 
 (defn task
   []
   (let [task-list (atom [])]
     (fn []
       [:div
-       [:h2 "Task Management"]
+       [page-header "Task Management"]
        [:div.panel
         (if (empty? @task-list)
           [ctask/task {:name "No tasks in task queue"}]
@@ -33,6 +37,4 @@
 
 (defn about
   []
-  [:div.jumbotron
-   [:h2 "Tazki Demo Application"]
-   [:p "This application was developed by Ed Sumitra with React and Reagent."]])
+  [page-header "Tazki Demo Application" "This application was developed by Ed Sumitra with React and Reagent."])
