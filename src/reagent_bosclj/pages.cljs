@@ -15,6 +15,8 @@
   []
   [:div
    [page-header "Task Dashboard"]
+   [:div.well
+    [ctask/new-task]]
    [:div.row
     [:div.col-sm-4
      [ctask/task-panel "New" :new []]]

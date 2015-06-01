@@ -5,7 +5,9 @@
      [reagent.core :as reagent :refer [atom]]
      [reagent-bosclj.utils :as utils]
      [reagent-bosclj.comp-navbar :as cnavbar]
-     [reagent-bosclj.pages :as pages])
+     [reagent-bosclj.pages :as pages]
+     [reagent-bosclj.events :as ev]
+     [reagent-bosclj.taskservice :as ts])
     (:require-macros [secretary.core :refer [defroute]]))
 
 (enable-console-print!)
@@ -39,7 +41,11 @@
 (defn init! []
   (secretary/set-config! :prefix "#")
   (session/put! :page :home)
+  (ev/initialize-event-que)
+  (ev/go-logger)
+  (ts/initialize-task-service)
   (utils/mount-component cnavbar/navbar (:navbar appdata) "navbar")
-  (utils/mount-component page nil "app"))
+  (utils/mount-component page nil "app")
+  )
 
 (init!)
