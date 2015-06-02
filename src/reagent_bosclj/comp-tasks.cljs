@@ -9,20 +9,21 @@
 
 (defn task
   "displays a task"
-  [& {:keys [name desc ui-state]} args]
+  [& {:keys [name desc ui-state]} props]
   (let [class (condp = ui-state
                 :new "well animated shake"
                 "well")]
-    [:div {:class class} name]))
+    [:div {:class class}
+      name]))
 
 (defn go-task-update
   "subscribes to state channel and updates ref-list with new items and deletes old items"
   [state ref-list]
-  (let [chan-data (async/chan)]
+  (let [xf (filter #(= state (get-in % [:event-data :state])))
+        chan-data (async/chan 1 xf)]
     (async/sub (ev/get-event-que) :service-task-update chan-data)
     (go-loop []
       (let [new-task (:event-data (async/<! chan-data))]
-        (println "new task in panel:" new-task)
         (swap! ref-list conj new-task))
       (recur))))
 

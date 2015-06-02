@@ -3,6 +3,7 @@
   (:require
    [reagent.core :as reagent :refer [atom]]
    [reagent-bosclj.comp-tasks :as ctask]
+   [reagent-bosclj.taskservice :as ts]
    [reagent-bosclj.utils :as utils]))
 
 (defn page-header
@@ -13,17 +14,18 @@
 
 (defn dashboard
   []
-  [:div
-   [page-header "Task Dashboard"]
-   [:div.well
-    [ctask/new-task]]
-   [:div.row
-    [:div.col-sm-4
-     [ctask/task-panel "New" :new []]]
-    [:div.col-sm-4
-     [ctask/task-panel "Pending" :scheduled []]]
-    [:div.col-sm-4
-     [ctask/task-panel "Completed" :completed []]]]])
+  (let [task-map (group-by :state (ts/find-all-tasks))]
+    [:div
+     [page-header "Task Dashboard"]
+     [:div.well
+      [ctask/new-task]]
+     [:div.row
+      [:div.col-sm-4
+       [ctask/task-panel "New" :new (:new task-map)]]
+      [:div.col-sm-4
+       [ctask/task-panel "Pending" :scheduled (:scheduled task-map)]]
+      [:div.col-sm-4
+       [ctask/task-panel "Completed" :completed (:completed task-map)]]]]))
 
 (defn task
   []
@@ -34,7 +36,7 @@
        [:div.panel
         (if (empty? @task-list)
           [ctask/task {:name "No tasks in task queue"}]
-          (doseq [t @task-list]
+          (for [t @task-list]
             ^{:key (:id t)} [ctask/task t]))]])))
 
 (defn about
