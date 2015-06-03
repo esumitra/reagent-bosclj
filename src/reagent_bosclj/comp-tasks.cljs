@@ -20,11 +20,17 @@
   "subscribes to state channel and updates ref-list with new items and deletes old items"
   [state ref-list]
   (let [xf (filter #(= state (get-in % [:event-data :state])))
-        chan-data (async/chan 1 xf)]
+        chan-data (async/chan)]
     (async/sub (ev/get-event-que) :service-task-update chan-data)
     (go-loop []
-      (let [new-task (:event-data (async/<! chan-data))]
-        (swap! ref-list conj new-task))
+      (let [new-task (:event-data (async/<! chan-data))
+            next-task (first @ref-list)]
+        (cond
+          (= state (:state new-task)) (swap! ref-list conj new-task)
+          (and (not (nil? next-task))
+               (= (:id new-task) (:id next-task))) (reset! ref-list (subvec @ref-list 1)) 
+                )
+        (println "list for state:" state @ref-list))
       (recur))))
 
 (defn task-panel
@@ -44,7 +50,7 @@
         (if (empty? @task-list)
           [task {:name "No tasks in this state"}]
           (for [t @task-list]
-            ^{:key (:id t)} [task t]))]])))
+            ^{:key (str state (:id t))} [task t]))]])))
 
 (defn new-task
   "new task form"
@@ -75,7 +81,7 @@
          [:a.btn.btn-warning.btn-raised
           {:on-click
            (fn [e]
-             (ev/post-event (ev/AppEvent. :update-ui-task :ui :accept)))} "Schedule Task"]]
+             (ev/post-event (ev/AppEvent. :update-ui-task :ui :schedule)))} "Schedule Task"]]
         [:span.col-sm-2
          [:a.btn.btn-success.btn-raised
           {:on-click

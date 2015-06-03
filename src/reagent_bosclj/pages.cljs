@@ -21,11 +21,11 @@
       [ctask/new-task]]
      [:div.row
       [:div.col-sm-4
-       [ctask/task-panel "New" :new (:new task-map)]]
+       [ctask/task-panel "New" :new (vec (:new task-map))]]
       [:div.col-sm-4
-       [ctask/task-panel "Pending" :scheduled (:scheduled task-map)]]
+       [ctask/task-panel "Pending" :scheduled (vec (:scheduled task-map))]]
       [:div.col-sm-4
-       [ctask/task-panel "Completed" :completed (:completed task-map)]]]]))
+       [ctask/task-panel "Completed" :completed (vec (:completed task-map))]]]]))
 
 (defn task
   []

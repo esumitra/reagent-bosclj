@@ -8,6 +8,17 @@
 (enable-console-print!)
 (defonce taskque (atom []))
 
+(defn get-min-index
+  "returns min index in taskque for given state, -1 if state not found"
+  [state]
+  (println @taskque)
+  (let [task-ndx (map-indexed
+                  #(if (= state (:state %2))
+                     %1
+                     999999)
+                  @taskque)]
+    (apply min task-ndx)))
+
 (defn find-all-tasks
   "returns all tasks in queue"
   []
@@ -20,10 +31,16 @@
     (swap! taskque conj new-task)
     (ev/post-event (ev/AppEvent. :service-task-update :service new-task))))
 
-(defn accept-task
-  "accepts next task in que"
+(defn schedule-task
+  "schedules next task in que"
   []
-  (println "task accepted:"))
+  (let [idx (get-min-index :new)]
+    (println "in schedule task")
+    (when (> idx -1)
+      #_(ev/post-event (ev/AppEvent. :service-task-update :service (get @taskque idx)))
+      (swap! taskque update-in [idx :state] (constantly :scheduled))
+      (ev/post-event (ev/AppEvent. :service-task-update :service (get @taskque idx)))
+      (println "task scheduled:" (get @taskque idx)))))
 
 (defn complete-task
   "completes next task in que"
@@ -51,7 +68,20 @@
         (new-task v))
       (recur))))
 
+(defn go-update-tasks
+  "event handler for update task events"
+  []
+  (let [chan-new-task (async/chan)]
+    (async/sub (ev/get-event-que) :update-ui-task chan-new-task)
+    (go-loop []
+      (let [v (:event-data (async/<! chan-new-task))]
+        (condp = v
+          :schedule (schedule-task)
+          :complete (complete-task)))
+      (recur))))
+
 (defn initialize-task-service
   "initializes task service by starting all event handlers"
   []
-  (go-new-tasks))
+  (go-new-tasks)
+  (go-update-tasks))
