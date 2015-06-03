@@ -29,14 +29,14 @@
 
 (defn task
   []
-  (let [task-list (atom [])]
+  (let [task-list (ts/find-all-tasks)#_[]]
     (fn []
       [:div
        [page-header "Task Management"]
        [:div.panel
-        (if (empty? @task-list)
+        (if (empty? task-list)
           [ctask/task {:name "No tasks in task queue"}]
-          (for [t @task-list]
+          (for [t task-list]
             ^{:key (:id t)} [ctask/task t]))]])))
 
 (defn about

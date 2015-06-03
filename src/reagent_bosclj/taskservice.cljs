@@ -35,17 +35,17 @@
   "schedules next task in que"
   []
   (let [idx (get-min-index :new)]
-    (println "in schedule task")
     (when (> idx -1)
-      #_(ev/post-event (ev/AppEvent. :service-task-update :service (get @taskque idx)))
       (swap! taskque update-in [idx :state] (constantly :scheduled))
-      (ev/post-event (ev/AppEvent. :service-task-update :service (get @taskque idx)))
-      (println "task scheduled:" (get @taskque idx)))))
+      (ev/post-event (ev/AppEvent. :service-task-update :service (get @taskque idx))))))
 
 (defn complete-task
   "completes next task in que"
   []
-  (println "task completed:"))
+  (let [idx (get-min-index :scheduled)]
+    (when (> idx -1)
+      (swap! taskque update-in [idx :state] (constantly :completed))
+      (ev/post-event (ev/AppEvent. :service-task-update :service (get @taskque idx))))))
 
 (defn purge-task-que
   "empties all tasks in queue"

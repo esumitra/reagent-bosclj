@@ -19,8 +19,7 @@
 (defn go-task-update
   "subscribes to state channel and updates ref-list with new items and deletes old items"
   [state ref-list]
-  (let [xf (filter #(= state (get-in % [:event-data :state])))
-        chan-data (async/chan)]
+  (let [chan-data (async/chan)]
     (async/sub (ev/get-event-que) :service-task-update chan-data)
     (go-loop []
       (let [new-task (:event-data (async/<! chan-data))
@@ -28,9 +27,7 @@
         (cond
           (= state (:state new-task)) (swap! ref-list conj new-task)
           (and (not (nil? next-task))
-               (= (:id new-task) (:id next-task))) (reset! ref-list (subvec @ref-list 1)) 
-                )
-        (println "list for state:" state @ref-list))
+               (= (:id new-task) (:id next-task))) (reset! ref-list (subvec @ref-list 1))))
       (recur))))
 
 (defn task-panel
@@ -45,12 +42,12 @@
     (fn [] 
       [:div {:class (str "panel " cname)}
        [:div.panel-heading 
-        [:h3.panel-title name]]
+        [:h3.panel-title name " " [:span.badge (count @task-list)]]]
        [:div.panel-body
         (if (empty? @task-list)
           [task {:name "No tasks in this state"}]
           (for [t @task-list]
-            ^{:key (str state (:id t))} [task t]))]])))
+            ^{:key (:id t)} [task t]))]])))
 
 (defn new-task
   "new task form"
