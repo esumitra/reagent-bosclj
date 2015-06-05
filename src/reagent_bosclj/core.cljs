@@ -45,7 +45,6 @@
   (ev/go-logger)
   (ts/initialize-task-service)
   (utils/mount-component cnavbar/navbar (:navbar appdata) "navbar")
-  (utils/mount-component page nil "app")
-  )
+  (utils/mount-component page nil "app"))
 
 (init!)

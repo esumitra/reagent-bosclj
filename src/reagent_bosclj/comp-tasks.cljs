@@ -30,6 +30,7 @@
                (= (:id new-task) (:id next-task))) (reset! ref-list (subvec @ref-list 1))))
       (recur))))
 
+;; span.badge number
 (defn task-panel
   "displays tasks in a panel"
   [name state init-task-list]
@@ -42,7 +43,7 @@
     (fn [] 
       [:div {:class (str "panel " cname)}
        [:div.panel-heading 
-        [:h3.panel-title name " " [:span.badge (count @task-list)]]]
+        [:h3.panel-title name]]
        [:div.panel-body
         (if (empty? @task-list)
           [task {:name "No tasks in this state"}]
