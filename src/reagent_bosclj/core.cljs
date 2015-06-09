@@ -47,4 +47,8 @@
   (utils/mount-component cnavbar/navbar (:navbar appdata) "navbar")
   (utils/mount-component page nil "app"))
 
+(defn on-js-reload
+  "figwheel reload initialization goes here"
+  [])
+
 (init!)
