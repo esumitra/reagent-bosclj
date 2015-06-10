@@ -16,8 +16,11 @@
                   #(if (= state (:state %2))
                      %1
                      999999)
-                  @taskque)]
-    (apply min task-ndx)))
+                  @taskque)
+        min-ndx (apply min task-ndx)]
+    (if (= 999999 min-ndx)
+      -1
+      min-ndx)))
 
 (defn find-all-tasks
   "returns all tasks in queue"

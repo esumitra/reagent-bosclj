@@ -105,8 +105,9 @@
          [:a.btn.btn-info.btn-raised
           {:on-click
            (fn [e]
-             (ev/post-event (ev/AppEvent. :new-ui-task :ui @task-data))
-             (reset! task-data {:name nil :desc nil}))} "Add Task"]]
+             (when-let [_ (:name @task-data)]
+               (ev/post-event (ev/AppEvent. :new-ui-task :ui @task-data))
+               (reset! task-data {:name nil :desc nil})))} "Add Task"]]
         [:span.col-sm-2
          [:a.btn.btn-warning.btn-raised
           {:on-click
