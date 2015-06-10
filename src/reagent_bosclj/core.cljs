@@ -4,7 +4,7 @@
      [reagent.session :as session]
      [reagent.core :as reagent :refer [atom]]
      [reagent-bosclj.utils :as utils]
-     [reagent-bosclj.comp-navbar :as cnavbar]
+     [reagent-bosclj.components :as rcomp]
      [reagent-bosclj.pages :as pages]
      [reagent-bosclj.events :as ev]
      [reagent-bosclj.taskservice :as ts])
@@ -12,17 +12,12 @@
 
 (enable-console-print!)
 
-(println "Edits to this text should show up in your developer console. Really!")
-
-;; define your app data so that it doesn't get over-written on reload
-(defonce app-state (atom {:text "Hello world!"}))
-(defonce appdata
-  {:navbar
-   {:brand "Tazki" 
-    :items [
-            {:name "Dashboard" :page :home :url "#/"}
-            {:name "Task Que" :page :task :url "#/task"}
-            {:name "About" :page :about :url "#/about"}]}})
+(defonce navbar-data
+  {:brand "Tazki" 
+   :items [
+           {:name "Dashboard" :page :home :url "#/"}
+           {:name "Task Que" :page :task :url "#/task"}
+           {:name "About" :page :about :url "#/about"}]})
 
 ;; setup secretary
 (def pages
@@ -44,7 +39,7 @@
   (ev/initialize-event-que)
   (ev/go-logger)
   (ts/initialize-task-service)
-  (utils/mount-component cnavbar/navbar (:navbar appdata) "navbar")
+  (utils/mount-component rcomp/navbar navbar-data "navbar")
   (utils/mount-component page nil "app"))
 
 (defn on-js-reload
