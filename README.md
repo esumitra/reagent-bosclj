@@ -7,6 +7,11 @@ Reagent is a popular Clojurescript library based on Facebook's React JS. The pre
  - Boston Clojure Meetup Presentation - [link](http://boston-clojure.github.io/reagent-webapp/#/)
  - Boston Clojure Meetup - [link](http://www.meetup.com/Boston-Clojure-Group/ "link") 
 
+## Demo
+The demo is a task management web application. The user can enter tasks in the task panel. Tasks are in three states - new, pending and completed and can be cycled through these states by clicking the Add, Schedule and Complete Task buttons. Refresh the page to reset the task data.
+
+[Demo](http://esumitra.github.io/reagent-bosclj/)
+
 ## Running the Demo
 
 The demo requires Java 7 and Lein 2.x to run

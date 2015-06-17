@@ -1,6 +1,6 @@
 (defproject reagent-bosclj "0.1.0-SNAPSHOT"
   :description "Reagent demo for Boston Clojure Group"
-  :url "http://example.com/FIXME"
+  :url "https://github.com/boston-clojure/reagent-webapp"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
 
