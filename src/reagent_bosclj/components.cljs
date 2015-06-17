@@ -75,7 +75,7 @@
     (fn [] 
       [:div {:class (str "panel " cname)}
        [:div.panel-heading 
-        [:h3.panel-title name]]
+        [:h3.panel-title name [:span.badge " " (count @task-list)]]]
        [:div.panel-body
         (if (empty? @task-list)
           [task {:name "No tasks in this state"}]
